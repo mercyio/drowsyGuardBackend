@@ -1,11 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ILoggedInUser, LoggedInUserDecorator } from 'src/common/decorators/logged_in_user.decorator';
+import {
+  ILoggedInUser,
+  LoggedInUserDecorator,
+} from 'src/common/decorators/logged_in_user.decorator';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RESPONSE_CONSTANT } from 'src/common/constants/response.constant';
-import { UpdateUserDto } from './dto/user.dto';
+import { PaginationDto } from '../repository/dto/repository.dto';
 
 @Controller('users')
 export class UserController {
@@ -18,10 +21,11 @@ export class UserController {
     return await this.userService.getUser(user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ResponseMessage(RESPONSE_CONSTANT.USER.UPDATE_USER_PROFILE_SUCCESS)
-  @Patch('/profile')
-  async updateProfile(@Body() payload: UpdateUserDto, @LoggedInUserDecorator() user: ILoggedInUser) {
-    return await this.userService.updateUser(payload, user._id);
+  @Get('all')
+  async getAllUsers(
+    @Query() query: PaginationDto,
+    @LoggedInUserDecorator() user: ILoggedInUser,
+  ) {
+    return await this.userService.getAllUsers(user._id, query);
   }
 }

@@ -1,17 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { UserRoleEnum } from '../../../../common/enums/user.enum';
-import { Interest } from '../../interest/schemas/interest.schema';
+import { WorkspaceTypeEnum } from '../../../../common/enums/workspace.enum';
 
 export type UserDocument = User & Document;
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({ required: true, unique: true })
-  email: string;
+  @Prop({ required: true, unique: false })
+  firstname: string;
 
-  @Prop({ required: false })
-  phone: string;
+  @Prop({ required: true, unique: false })
+  lastname: string;
+
+  @Prop({ required: true, unique: false })
+  email: string;
 
   @Prop({ default: false })
   emailVerified: boolean;
@@ -22,17 +25,8 @@ export class User {
   @Prop({ enum: UserRoleEnum, default: UserRoleEnum.USER })
   role: UserRoleEnum;
 
-  @Prop()
-  birthday: Date;
-
-  @Prop({ unique: true })
-  username: string;
-
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: Interest.name })
-  interests: mongoose.Types.ObjectId[];
-
-  @Prop({ default: 0 })
-  wallet: number;
+  @Prop({ enum: WorkspaceTypeEnum, default: WorkspaceTypeEnum.PERSONAL })
+  workspace: WorkspaceTypeEnum;
 
   @Prop({ default: false })
   isGoogleAuth: boolean;

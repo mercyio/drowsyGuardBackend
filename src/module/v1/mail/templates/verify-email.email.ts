@@ -9,19 +9,20 @@ export function VerifyEmailTemplate(data: IVerifyEmailTemplate) {
       <a
         href=''
         style='font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600'
-      >macwin</a>
+      >drowsyGuard</a>
     </div>
     <p style='font-size:1.1em'>Hi,</p>
     <p>Verify your email with the code below. This code
       <b>expires</b>
       in 5 minutes</p>
     <h2> ${data.code}</h2>
-    <p style='font-size:0.9em;'>Regards,<br />macwin</p>
+    <p>If you didn't ask to verify this email address, you can ignore this email.</p>
+    <p style='font-size:0.9em;'>Regards,<br />drowsyGuard</p>
     <hr style='border:none;border-top:1px solid #eee' />
     <div
       style='float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300'
     >
-      <p>macwin</p>
+      <p>drowsyGuard</p>
     </div>
   </div>
 </div>`;
