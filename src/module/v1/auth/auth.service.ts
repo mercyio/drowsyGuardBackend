@@ -49,7 +49,10 @@ export class AuthService {
       throw new BadRequestException('Invalid Credential');
     }
 
-    const passwordMatch = await BaseHelper.compareHashedData(password, user.password);
+    const passwordMatch = await BaseHelper.compareHashedData(
+      password,
+      user.password,
+    );
 
     if (!passwordMatch) {
       throw new BadRequestException('Incorrect Password');
@@ -88,7 +91,6 @@ export class AuthService {
 
     await this.userService.updateUserByEmail(email, {
       emailVerified: true,
-      wallet: user.wallet + 100,
     });
   }
 

@@ -15,7 +15,7 @@ import { join } from 'path';
         },
       },
       defaults: {
-        from: '"No Reply" <noreply>@macwin.com>',
+        from: '"No Reply" <noreply>@drowsyGuard.com>',
       },
       template: {
         dir: join(__dirname, 'templates'),

@@ -19,7 +19,9 @@ async function bootstrap() {
   /**
    * interceptors
    */
-  app.useGlobalInterceptors(new ResponseTransformerInterceptor(app.get(Reflector)));
+  app.useGlobalInterceptors(
+    new ResponseTransformerInterceptor(app.get(Reflector)),
+  );
 
   /**
    * Set global exception filter

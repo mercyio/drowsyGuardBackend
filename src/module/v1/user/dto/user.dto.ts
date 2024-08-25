@@ -1,18 +1,32 @@
-import { IsArray, IsDateString, IsEmail, IsOptional, IsString, Length, MaxLength, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
+  @IsString()
+  firstname: string;
+
+  @IsString()
+  lastname: string;
+
   @IsEmail()
   email: string;
-
-  @IsOptional()
-  @IsString()
-  @Length(10, 11)
-  phone: string;
 
   @IsString()
   @MinLength(4)
   @MaxLength(20)
   password: string;
+
+  @IsString()
+  @MinLength(4)
+  @MaxLength(20)
+  confirmPassword: string;
 }
 
 export class UpdateUserDto {
