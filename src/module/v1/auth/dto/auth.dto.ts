@@ -12,8 +12,8 @@ export class VerifyEmailDto {
   @IsEmail()
   email: string;
 
-  @IsNumber()
-  code: number;
+  // @IsNumber()
+  // code: number;
 }
 
 export class RequestVerifyEmailOtpDto {
