@@ -32,10 +32,10 @@ export class AuthService {
   async register(payload: CreateUserDto) {
     const user = await this.userService.createUser(payload);
 
-    await this.otpService.sendOTP({
-      email: user.email,
-      type: OtpTypeEnum.VERIFY_EMAIL,
-    });
+    // await this.otpService.sendOTP({
+    //   email: user.email,
+    //   type: OtpTypeEnum.VERIFY_EMAIL,
+    // });
 
     return user;
   }
@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   async verifyEmail(payload: VerifyEmailDto) {
-    const { code, email } = payload;
+    const { email } = payload;
 
     const user = await this.userService.getUserByEmail(email);
 
@@ -82,12 +82,6 @@ export class AuthService {
     if (user.emailVerified) {
       throw new UnprocessableEntityException('Email already verified');
     }
-
-    await this.otpService.verifyOTP({
-      code,
-      email,
-      type: OtpTypeEnum.VERIFY_EMAIL,
-    });
 
     await this.userService.updateUserByEmail(email, {
       emailVerified: true,
