@@ -88,7 +88,7 @@ export class AuthService {
     });
   }
 
-  async sendVerificationMail(payload: RequestVerifyEmailOtpDto) {
+  async verifyEmailOTP(payload: RequestVerifyEmailOtpDto) {
     await this.userService.checkUserExistByEmail(payload.email);
 
     await this.otpService.sendOTP({
