@@ -130,6 +130,11 @@ export class AuthService {
     const user = await this.userService.getUserByEmail(email);
 
     if (user) {
+      if (!user.isGoogleAuth) {
+        throw new ConflictException(
+          'Looks like you already have an account! Use your existing login details or choose a different email address to sign up with Google',
+        );
+      }
       await this.userService.updateUserByEmail(email, {
         isLoggedOut: false,
       });
