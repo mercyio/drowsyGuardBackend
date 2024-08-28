@@ -1,16 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, GoogleAuthDto } from '../user/dto/user.dto';
 import { ResponseMessage } from '../../../common/decorators/response.decorator';
 import {
-  ForgotPasswordDto,
   LoginDto,
   RequestVerifyEmailOtpDto,
-  ResetPasswordDto,
   VerifyEmailDto,
 } from './dto/auth.dto';
 import { Public } from '../../../common/decorators/public.decorator';
 import { RESPONSE_CONSTANT } from '../../../common/constants/response.constant';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -44,23 +43,15 @@ export class AuthController {
   }
 
   @Public()
-  @Post('forgot-password')
-  @ResponseMessage(RESPONSE_CONSTANT.AUTH.PASSWORD_RESET_EMAIL_SUCCESS)
-  async sendPasswordResetEmail(@Body() payload: ForgotPasswordDto) {
-    return await this.authService.sendPasswordResetEmail(payload);
-  }
-
-  @Public()
-  @Post('forgot-password/update')
-  @ResponseMessage(RESPONSE_CONSTANT.AUTH.PASSWORD_RESET_SUCCESS)
-  async resetPassword(@Body() payload: ResetPasswordDto) {
-    return await this.authService.resetPassword(payload);
-  }
-
-  @Public()
   @Post('google')
   @ResponseMessage(RESPONSE_CONSTANT.AUTH.LOGIN_SUCCESS)
   async googleAuth(@Body() payload: GoogleAuthDto) {
     return await this.authService.googleAuth(payload);
+  }
+
+  @Post('logout')
+  @ResponseMessage(RESPONSE_CONSTANT.AUTH.LOGOUT_SUCCESS)
+  async logout(@Req() req: Request) {
+    return await this.authService.logout(req);
   }
 }

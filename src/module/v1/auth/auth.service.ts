@@ -5,6 +5,7 @@ import {
   Inject,
   forwardRef,
   UnprocessableEntityException,
+  Req,
 } from '@nestjs/common';
 import { CreateUserDto, GoogleAuthDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
@@ -19,6 +20,7 @@ import { BaseHelper } from '../../../common/utils/helper.util';
 import { JwtService } from '@nestjs/jwt';
 import { OtpService } from '../otp/otp.service';
 import { OtpTypeEnum } from 'src/common/enums/otp.enum';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +33,6 @@ export class AuthService {
 
   async register(payload: CreateUserDto) {
     const user = await this.userService.createUser(payload);
-
-    // await this.otpService.sendOTP({
-    //   email: user.email,
-    //   type: OtpTypeEnum.VERIFY_EMAIL,
-    // });
 
     return user;
   }
@@ -62,6 +59,7 @@ export class AuthService {
       throw new BadRequestException('kindly verify your email to login');
     }
 
+    await this.userService.updateUserByEmail(email, { isLoggedOut: false });
     const token = this.jwtService.sign({ _id: user._id });
     delete user['_doc'].password;
     return {
@@ -132,6 +130,10 @@ export class AuthService {
     const user = await this.userService.getUserByEmail(email);
 
     if (user) {
+      await this.userService.updateUserByEmail(email, {
+        isLoggedOut: false,
+      });
+
       const token = this.jwtService.sign({ _id: user._id });
       return { ...user['_doc'], accessToken: token };
     }
@@ -140,5 +142,12 @@ export class AuthService {
 
     const token = this.jwtService.sign({ _id: newUser._id });
     return { ...newUser['_doc'], accessToken: token };
+  }
+
+  async logout(@Req() req: Request) {
+    const user = req.user as { email: string };
+    await this.userService.updateUserByEmail(user.email, {
+      isLoggedOut: true,
+    });
   }
 }
