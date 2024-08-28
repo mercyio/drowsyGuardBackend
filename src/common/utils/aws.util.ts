@@ -2,7 +2,12 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { BaseHelper } from './helper.util';
 import { ENVIRONMENT } from '../configs/environment';
 
-if (!ENVIRONMENT.AWS.ACCESS_KEY || !ENVIRONMENT.AWS.BUCKET_NAME || !ENVIRONMENT.AWS.REGION || !ENVIRONMENT.AWS.SECRET) {
+if (
+  !ENVIRONMENT.AWS.ACCESS_KEY ||
+  !ENVIRONMENT.AWS.BUCKET_NAME ||
+  !ENVIRONMENT.AWS.REGION ||
+  !ENVIRONMENT.AWS.SECRET
+) {
   throw new Error('Aws S3 environment variables are not set');
 }
 
@@ -15,7 +20,10 @@ export const s3Client = new S3Client({
   },
 });
 
-export const uploadSingleFile = async (file: Express.Multer.File, folder?: string): Promise<{ url: string }> => {
+export const uploadSingleFile = async (
+  file: Express.Multer.File,
+  folder?: string,
+): Promise<{ url: string }> => {
   const { buffer, mimetype } = file;
 
   const fileName = BaseHelper.generateFileName(folder, mimetype);

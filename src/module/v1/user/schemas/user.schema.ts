@@ -7,13 +7,13 @@ export type UserDocument = User & Document;
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({ required: true, unique: false })
+  @Prop({ unique: false, index: true })
   firstname: string;
 
-  @Prop({ required: true, unique: false })
+  @Prop({ unique: false, index: true })
   lastname: string;
 
-  @Prop({ required: true, unique: false })
+  @Prop({ unique: true, index: true, required: true })
   email: string;
 
   @Prop({ default: false })
@@ -30,6 +30,9 @@ export class User {
 
   @Prop({ default: false })
   isGoogleAuth: boolean;
+
+  @Prop({ default: false })
+  isLoggedOut: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

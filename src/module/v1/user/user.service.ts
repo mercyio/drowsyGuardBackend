@@ -67,6 +67,10 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
+  async findOneById(userId: string) {
+    return this.userModel.findById(userId);
+  }
+
   async updateUserByEmail(email: string, details: any) {
     return this.userModel.updateOne({ email }, details);
   }
@@ -99,6 +103,7 @@ export class UserService {
       ...payload,
       emailVerified: true,
       isGoogleAuth: true,
+      isLoggedOut: false,
     });
   }
 }
