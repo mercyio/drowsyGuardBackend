@@ -59,7 +59,10 @@ export class AuthService {
       throw new BadRequestException('kindly verify your email to login');
     }
 
-    await this.userService.updateUserByEmail(email, { isLoggedOut: false });
+    await this.userService.updateUserByEmail(email, {
+      isLoggedOut: false,
+      // isCameraOn: true,
+    });
     const token = this.jwtService.sign({ _id: user._id });
     delete user['_doc'].password;
     return {

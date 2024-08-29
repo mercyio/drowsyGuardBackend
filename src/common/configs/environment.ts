@@ -32,6 +32,10 @@ export interface IEnvironment {
   REDIS: {
     URL: string;
   };
+  AGORA: {
+    APP_ID: string;
+    APP_CERTIFICATE: string;
+  };
 }
 
 export const ENVIRONMENT: IEnvironment = {
@@ -64,5 +68,9 @@ export const ENVIRONMENT: IEnvironment = {
   },
   REDIS: {
     URL: process.env.REDIS_URL,
+  },
+  AGORA: {
+    APP_ID: process.env.AGORA_APP_ID,
+    APP_CERTIFICATE: process.env.AGORA_APP_CERTIFICATE,
   },
 };
