@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ILoggedInUser,
@@ -29,7 +29,7 @@ export class UserController {
     return await this.userService.getAllUsers(user._id, query);
   }
 
-  @Get('live-stream')
+  @Post('live-stream')
   @ResponseMessage(RESPONSE_CONSTANT.CAMERA.CAMERA_ON)
   async liveStream(@LoggedInUserDecorator() user: ILoggedInUser,){
     return await this.userService.liveStream(user._id)
