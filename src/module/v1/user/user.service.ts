@@ -113,7 +113,7 @@ export class UserService {
     });
   }
 
-  async startCamera(userId: string) {
+  async liveStream(userId: string) {
     await this.updateUserById(userId, { isCameraOn: true });
 
     const channelName = `live_session_${userId}_${Date.now()}`;

@@ -29,9 +29,9 @@ export class UserController {
     return await this.userService.getAllUsers(user._id, query);
   }
 
-  @Get('camera')
+  @Get('live-stream')
   @ResponseMessage(RESPONSE_CONSTANT.CAMERA.CAMERA_ON)
-  async startCamera(@LoggedInUserDecorator() user: ILoggedInUser,){
-    return await this.userService.startCamera(user._id)
+  async liveStream(@LoggedInUserDecorator() user: ILoggedInUser,){
+    return await this.userService.liveStream(user._id)
   }
 }
