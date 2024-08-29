@@ -19,4 +19,7 @@ export const RESPONSE_CONSTANT = {
     UPDATED_SUCCESS: 'interest updated successfully',
     GET_ALL_INTEREST__SUCCESS: 'available interest in database',
   },
+  CAMERA: {
+    CAMERA_ON: 'Camera turned on successfully',
+  },
 };

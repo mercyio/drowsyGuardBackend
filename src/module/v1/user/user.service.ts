@@ -11,11 +11,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BaseHelper } from '../../../common/utils/helper.util';
 import { RepositoryService } from '../repository/repository.service';
 import { PaginationDto } from '../repository/dto/repository.dto';
+import { AgoraService } from 'src/common/utils/third_party_services/agora.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private repositoryService: RepositoryService,
+    private agoraService: AgoraService,
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
   ) {}
@@ -75,6 +77,10 @@ export class UserService {
     return this.userModel.updateOne({ email }, details);
   }
 
+  async updateUserById(userId: string, details: any) {
+    return this.userModel.updateOne({ userId }, details);
+  }
+
   async checkUserExistByEmail(email: string): Promise<boolean> {
     const user = await this.getUserByEmail(email);
 
@@ -105,5 +111,20 @@ export class UserService {
       isGoogleAuth: true,
       isLoggedOut: false,
     });
+  }
+
+  async startCamera(userId: string) {
+    await this.updateUserById(userId, { isCameraOn: true });
+
+    const channelName = `live_session_${userId}_${Date.now()}`;
+
+    const uid = Math.floor(Math.random() * 1000000); // Randomly generated uid
+
+    const token = await this.agoraService.generateToken(channelName, uid);
+    return {
+      userId,
+      uid,
+      token,
+    };
   }
 }
