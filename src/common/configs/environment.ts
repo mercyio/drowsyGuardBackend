@@ -36,6 +36,12 @@ export interface IEnvironment {
     APP_ID: string;
     APP_CERTIFICATE: string;
   };
+
+  ADMIN: {
+    EMAIL: string;
+    PASSWORD: string;
+    USERNAME: string;
+  };
 }
 
 export const ENVIRONMENT: IEnvironment = {
@@ -72,5 +78,10 @@ export const ENVIRONMENT: IEnvironment = {
   AGORA: {
     APP_ID: process.env.AGORA_APP_ID,
     APP_CERTIFICATE: process.env.AGORA_APP_CERTIFICATE,
+  },
+  ADMIN: {
+    EMAIL: process.env.ADMIN_EMAIL,
+    PASSWORD: process.env.ADMIN_PASSWORD,
+    USERNAME: process.env.ADMIN_USERNAME,
   },
 };
