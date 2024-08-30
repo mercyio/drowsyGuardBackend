@@ -25,8 +25,8 @@ export class AuthController {
   @Public()
   @Post('login')
   @ResponseMessage(RESPONSE_CONSTANT.AUTH.LOGIN_SUCCESS)
-  async login(@Body() payload: LoginDto) {
-    return await this.authService.login(payload);
+  async login(@Body() payload: LoginDto, adminId: string) {
+    return await this.authService.login(payload, adminId);
   }
 
   @Public()

@@ -21,11 +21,13 @@ import { JwtService } from '@nestjs/jwt';
 import { OtpService } from '../otp/otp.service';
 import { OtpTypeEnum } from 'src/common/enums/otp.enum';
 import { Request } from 'express';
+import { AdminService } from '../admin/admin.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
+    private adminService: AdminService,
     private jwtService: JwtService,
     @Inject(forwardRef(() => OtpService))
     private readonly otpService: OtpService,
@@ -37,8 +39,30 @@ export class AuthService {
     return user;
   }
 
-  async login(payload: LoginDto) {
+  async login(payload: LoginDto, adminId: string) {
     const { email, password } = payload;
+
+    const admin = await this.adminService.getAdminByEmailIncludePassword(email);
+    if (admin) {
+      const isPasswordValid = await BaseHelper.compareHashedData(
+        password,
+        admin.password,
+      );
+
+      if (!isPasswordValid) {
+        throw new BadRequestException('Invalid Credentials');
+      }
+
+      const admins = await this.adminService.getAdmin(adminId);
+      const token = this.jwtService.sign({ _id: admins });
+
+      delete admin['_doc'].password;
+
+      return {
+        ...admin['_doc'],
+        accessToken: token,
+      };
+    }
 
     const user = await this.userService.getUserByEmailIncludePassword(email);
 
