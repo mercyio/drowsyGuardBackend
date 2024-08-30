@@ -36,6 +36,7 @@ export class AdminService {
       const result = await this.adminModel.create({
         ...payload,
         password: hashedPassword,
+        
       });
 
       delete result['_doc'].password;
