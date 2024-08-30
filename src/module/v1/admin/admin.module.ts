@@ -7,10 +7,14 @@ import { RepositoryModule } from '../repository/repository.module';
 import { SeederService } from '../seeder/seeder.service';
 import { SeederModule } from '../seeder/seeder.module';
 import { forwardRef } from '@nestjs/common';
+import { User, UserSchema } from '../user/schemas/user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Admin.name, schema: AdminSchema }]),
+    MongooseModule.forFeature([
+      // { name: Admin.name, schema: AdminSchema },
+      { name: User.name, schema: UserSchema },
+    ]),
     RepositoryModule,
     forwardRef(() => SeederModule),
   ],

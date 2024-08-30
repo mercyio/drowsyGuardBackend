@@ -27,7 +27,6 @@ import { AdminService } from '../admin/admin.service';
 export class AuthService {
   constructor(
     private userService: UserService,
-    private adminService: AdminService,
     private jwtService: JwtService,
     @Inject(forwardRef(() => OtpService))
     private readonly otpService: OtpService,
@@ -41,28 +40,6 @@ export class AuthService {
 
   async login(payload: LoginDto, adminId: string) {
     const { email, password } = payload;
-
-    const admin = await this.adminService.getAdminByEmailIncludePassword(email);
-    if (admin) {
-      const isPasswordValid = await BaseHelper.compareHashedData(
-        password,
-        admin.password,
-      );
-
-      if (!isPasswordValid) {
-        throw new BadRequestException('Invalid Credentials');
-      }
-
-      const admins = await this.adminService.getAdmin(adminId);
-      const token = this.jwtService.sign({ _id: admins });
-
-      delete admin['_doc'].password;
-
-      return {
-        ...admin['_doc'],
-        accessToken: token,
-      };
-    }
 
     const user = await this.userService.getUserByEmailIncludePassword(email);
 
