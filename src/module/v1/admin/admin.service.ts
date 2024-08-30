@@ -14,17 +14,19 @@ import { JwtService } from '@nestjs/jwt';
 import { PaginationDto } from '../repository/dto/repository.dto';
 import { RepositoryService } from '../repository/repository.service';
 import { ENVIRONMENT } from 'src/common/configs/environment';
+import { User, UserDocument } from '../user/schemas/user.schema';
+import { UserRoleEnum } from 'src/common/enums/user.enum';
 
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectModel(Admin.name)
-    private adminModel: Model<AdminDocument>,
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
     private jwtService: JwtService,
     private repositoryService: RepositoryService,
   ) {}
 
-  async create(): Promise<AdminDocument> {
+  async create(): Promise<UserDocument> {
     try {
       const payload = {
         password: ENVIRONMENT.ADMIN.PASSWORD,
@@ -33,10 +35,11 @@ export class AdminService {
 
       const hashedPassword = await BaseHelper.hashData(payload.password);
 
-      const result = await this.adminModel.create({
+      const result = await this.userModel.create({
         ...payload,
         password: hashedPassword,
-        
+        emailVerified: true,
+        role: UserRoleEnum.ADMIN,
       });
 
       delete result['_doc'].password;
@@ -48,66 +51,19 @@ export class AdminService {
     }
   }
 
-  // async login(payload: AdminLoginDto) {
-  //   const { adminId } = payload;
-
-  //   const admin = await this.getAdmin(adminId);
-
-  //   if (!admin) {
-  //     throw new BadRequestException('Invalid Credential');
-  //   }
-
-  //   const token = this.jwtService.sign({ _id: adminId });
-  //   return {
-  //     ...admin['_doc'],
-  //     accessToken: token,
-  //   };
+  // async getAdminByEmailIncludePassword(email: string): Promise<AdminDocument> {
+  //   return this.userModel.findOne({ email }).select('+password');
   // }
 
-  async login(payload: AdminLoginDto, adminId: string) {
-    const { email, password } = payload;
+  // async getAdmin(id: string): Promise<AdminDocument> {
+  //   return this.adminModel.findOne({ _id: id });
+  // }
 
-    const admin = await this.getAdminByEmailIncludePassword(email);
+  // async getAllAdmins(query: PaginationDto) {
+  //   return await this.repositoryService.paginate(this.adminModel, query);
+  // }
 
-    if (!admin) {
-      throw new BadRequestException('Invalid Credentials');
-    }
-
-    const isPasswordValid = await BaseHelper.compareHashedData(
-      password,
-      admin.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new BadRequestException('Invalid Credentials');
-    }
-
-    const admins = await this.getAdmin(adminId);
-    const token = this.jwtService.sign({ _id: admins });
-
-    const adminResponse = { ...admin['_doc'] };
-    delete adminResponse.password;
-
-    return {
-      ...adminResponse,
-      accessToken: token,
-    };
-  }
-
-  async getAdminByEmailIncludePassword(email: string): Promise<AdminDocument> {
-    return this.adminModel.findOne({ email }).select('+password');
-  }
-
-  async getAdmin(id: string): Promise<AdminDocument> {
-    return this.adminModel.findOne({ _id: id });
-    // .populate('interests');
-  }
-
-  async getAllAdmins(query: PaginationDto) {
-    return await this.repositoryService.paginate(this.adminModel, query);
-  }
-
-  async getAdminByEmail(email: string): Promise<AdminDocument> {
-    return this.adminModel.findOne({ email });
-  }
+  // async getAdminByEmail(email: string): Promise<AdminDocument> {
+  //   return this.adminModel.findOne({ email });
+  // }
 }

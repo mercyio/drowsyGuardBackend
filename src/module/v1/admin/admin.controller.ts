@@ -22,20 +22,14 @@ export class AdminController {
   async create() {
     return await this.seederService.seedAdmins();
   }
-  @ResponseMessage(RESPONSE_CONSTANT.AUTH.LOGIN_SUCCESS)
-  @Public()
-  @Post('login')
-  async login(@Body() payload: AdminLoginDto, adminId: string) {
-    return await this.adminService.login(payload, adminId);
-  }
-  @Get('all')
-  async getAllAdmins(@Query() query: PaginationDto) {
-    return await this.adminService.getAllAdmins(query);
-  }
+  // @Get('all')
+  // async getAllAdmins(@Query() query: PaginationDto) {
+  //   return await this.adminService.getAllAdmins(query);
+  // }
 
-  @ResponseMessage(RESPONSE_CONSTANT.USER.GET_CURRENT_USER_SUCCESS)
-  @Get('/')
-  async getCurrenAmin(@LoggedInUserDecorator() user: any) {
-    return await this.adminService.getAdmin(user.id);
-  }
+  // @ResponseMessage(RESPONSE_CONSTANT.USER.GET_CURRENT_USER_SUCCESS)
+  // @Get('/')
+  // async getCurrenAmin(@LoggedInUserDecorator() user: any) {
+  //   return await this.adminService.getAdmin(user.id);
+  // }
 }

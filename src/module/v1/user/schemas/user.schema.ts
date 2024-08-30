@@ -8,10 +8,10 @@ export type UserDocument = User & Document;
 @Schema({ timestamps: true })
 export class User {
   @Prop({ unique: false, index: true })
-  firstname: string;
+  firstname?: string;
 
   @Prop({ unique: false, index: true })
-  lastname: string;
+  lastname?: string;
 
   @Prop({ unique: true, index: true, required: true })
   email: string;
