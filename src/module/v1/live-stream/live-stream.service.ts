@@ -279,6 +279,67 @@ import * as FormData from 'form-data';
 export class FaceDetectionService {
   constructor(private readonly httpService: HttpService) {}
 
+  //   async processFrame(videoId: string, imageBuffer: Buffer): Promise<void> {
+  //     try {
+  //       // Prepare form-data with the image buffer
+  //       const formData = new FormData();
+  //       formData.append('frame', imageBuffer, {
+  //         filename: 'Image.jpeg',
+  //         contentType: 'multipart/form-data',
+  //       });
+
+  //       // Send the request to the API with video_id as a query parameter
+  //       const response = await this.httpService
+  //         .post(
+  //           `https://new-1092691522090.africa-south1.run.app/process-frame/?video_id=${videoId}`, // video_id passed as query param
+  //           formData,
+  //           // params: { video_id: videoId },
+  //           {
+  //             headers: formData.getHeaders(),
+  //           },
+  //         )
+  //         .toPromise(); // Convert Observable to Promise for async/await handling
+
+  //       console.log('Response:', response.data);
+
+  //       const responseJson = response.data;
+  //       console.log('Detections:', responseJson.detections);
+
+  //       // Process base64 image from response
+  //       const frameBase64 = responseJson.frame;
+  //       if (frameBase64) {
+  //         const decodedImage = Buffer.from(frameBase64, 'base64');
+  //         const image = sharp(decodedImage);
+
+  //         // Resize image as an example
+  //         const resizedImage = await image.resize(800).toBuffer();
+
+  //         // Save the resized image
+  //         fs.writeFileSync('resized_image.jpg', resizedImage);
+  //         console.log('Image resized and saved as resized_image.jpg');
+
+  //         return {
+  //           videoId: responseJson.video_id,
+  //           detections: responseJson.detections,
+  //           resizedFrame: imageBuffer, // Return base64-encoded resized image
+  //         };
+  //       } else {
+  //         console.log('No frame data found in the response.');
+  //       }
+  //     } catch (error) {
+  //       if (axios.isAxiosError(error)) {
+  //         console.error(
+  //           'Axios error occurred:',
+  //           JSON.stringify(error.response?.data, null, 2),
+  //         );
+  //       } else {
+  //         console.error('An unexpected error occurred:', error);
+  //       }
+  //       console.error('Error processing frame:', error.message);
+  //     }
+  //   }
+  // }
+
   async processFrame(videoId: string, imageBuffer: Buffer): Promise<any> {
     try {
       // Prepare form-data with the image buffer
@@ -302,21 +363,15 @@ export class FaceDetectionService {
       const responseJson = response.data;
       console.log('Detections:', responseJson.detections);
 
-      // Process base64 image from response
-      const frameBase64 = responseJson.frame;
-      // let decodedImage: Buffer;
-      // if (frameBase64) {
-      //   // Decode the base64 image back to a binary buffer
-      //   // decodedImage = Buffer.from(frameBase64, 'base64');
-      // } else {
-      //   throw new Error('No frame data found in the response.');
-      // }
+      // Convert the image buffer to base64 string
+      const imageBase64 = imageBuffer.toString('base64');
+      const imageBase64Data = `data:image/jpeg;base64,${imageBase64}`;
 
-      // Return the decoded image (binary buffer) and detection info
+      // Return the base64 image and detection info
       return {
         videoId: responseJson.video_id,
         detections: responseJson.detections,
-        image: imageBuffer.buffer, // Return the image as a buffer
+        image: imageBase64Data, // Return the image as base64 string
       };
     } catch (error) {
       console.error('Error processing frame:', error.message);
