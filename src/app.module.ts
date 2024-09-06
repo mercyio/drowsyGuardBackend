@@ -6,6 +6,7 @@ import { OtpModule } from './module/v1/otp/otp.module';
 import { MailModule } from './module/v1/mail/mail.module';
 import { RepositoryModule } from './module/v1/repository/repository.module';
 import { SeederModule } from './module/v1/seeder/seeder.module';
+import { FaceDetectionModule } from './module/v1/live-stream/live-stream.module';
 // import { MapModule } from './module/v1/map/map.module';
 
 @Module({
@@ -16,7 +17,8 @@ import { SeederModule } from './module/v1/seeder/seeder.module';
     OtpModule,
     MailModule,
     RepositoryModule,
-    SeederModule
+    SeederModule,
+    FaceDetectionModule,
     // MapModule,
   ],
   controllers: [],
