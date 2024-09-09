@@ -2,34 +2,21 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  Inject,
-  forwardRef,
   UnprocessableEntityException,
   Req,
 } from '@nestjs/common';
 import { CreateUserDto, GoogleAuthDto } from '../user/dto/user.dto';
 import { UserService } from '../user/user.service';
-import {
-  ForgotPasswordDto,
-  LoginDto,
-  RequestVerifyEmailOtpDto,
-  ResetPasswordDto,
-  VerifyEmailDto,
-} from './dto/auth.dto';
+import { LoginDto, VerifyEmailDto } from './dto/auth.dto';
 import { BaseHelper } from '../../../common/utils/helper.util';
 import { JwtService } from '@nestjs/jwt';
-import { OtpService } from '../otp/otp.service';
-import { OtpTypeEnum } from 'src/common/enums/otp.enum';
 import { Request } from 'express';
-import { AdminService } from '../admin/admin.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    @Inject(forwardRef(() => OtpService))
-    private readonly otpService: OtpService,
   ) {}
 
   async register(payload: CreateUserDto) {
@@ -38,7 +25,7 @@ export class AuthService {
     return user;
   }
 
-  async login(payload: LoginDto, adminId: string) {
+  async login(payload: LoginDto) {
     const { email, password } = payload;
 
     const user = await this.userService.getUserByEmailIncludePassword(email);
@@ -87,44 +74,6 @@ export class AuthService {
 
     await this.userService.updateUserByEmail(email, {
       emailVerified: true,
-    });
-  }
-
-  async sendVerificationMail(payload: RequestVerifyEmailOtpDto) {
-    await this.userService.checkUserExistByEmail(payload.email);
-
-    await this.otpService.sendOTP({
-      ...payload,
-      type: OtpTypeEnum.VERIFY_EMAIL,
-    });
-  }
-
-  async sendPasswordResetEmail(payload: ForgotPasswordDto) {
-    await this.userService.checkUserExistByEmail(payload.email);
-
-    await this.otpService.sendOTP({
-      ...payload,
-      type: OtpTypeEnum.RESET_PASSWORD,
-    });
-  }
-
-  async resetPassword(payload: ResetPasswordDto) {
-    const { email, password, confirmPassword, code } = payload;
-
-    if (password !== confirmPassword) {
-      throw new ConflictException('Passwords do not match');
-    }
-
-    await this.otpService.verifyOTP({
-      email,
-      code,
-      type: OtpTypeEnum.RESET_PASSWORD,
-    });
-
-    const hashedPassword = await BaseHelper.hashData(password);
-
-    await this.userService.updateUserByEmail(email, {
-      password: hashedPassword,
     });
   }
 

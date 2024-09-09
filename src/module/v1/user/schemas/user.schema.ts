@@ -33,9 +33,6 @@ export class User {
 
   @Prop({ default: false })
   isLoggedOut: boolean;
-
-  @Prop({ default: false })
-  isCameraOn: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

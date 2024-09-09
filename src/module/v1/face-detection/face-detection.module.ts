@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HttpModule } from '@nestjs/axios';
 import { User, UserSchema } from '../user/schemas/user.schema';
-import { FaceDetectionService } from './live-stream.service';
-import { FaceDetectionController } from './live-stream.controller';
+import { FaceDetectionService } from './face-detection.service';
+import { FaceDetectionController } from './face-detection.controller';
 
 @Module({
   imports: [

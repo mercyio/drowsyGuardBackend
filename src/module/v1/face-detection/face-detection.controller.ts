@@ -1,14 +1,13 @@
 import {
   Controller,
   Post,
-  Body,
   UploadedFile,
   UseInterceptors,
   BadRequestException,
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FaceDetectionService } from './live-stream.service';
+import { FaceDetectionService } from './face-detection.service';
 
 @Controller('face-detection')
 export class FaceDetectionController {
