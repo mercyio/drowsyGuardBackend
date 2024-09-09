@@ -1,11 +1,8 @@
 // /* eslint-disable prettier/prettier */
-import { Controller, Body, Get, Query, Post } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { AdminLoginDto } from './dto/admin.dto';
-import { PaginationDto } from '../repository/dto/repository.dto';
 import { ResponseMessage } from 'src/common/decorators/response.decorator';
 import { RESPONSE_CONSTANT } from 'src/common/constants/response.constant';
-import { LoggedInUserDecorator } from 'src/common/decorators/logged_in_user.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { SeederService } from '../seeder/seeder.service';
 
@@ -22,14 +19,4 @@ export class AdminController {
   async create() {
     return await this.seederService.seedAdmins();
   }
-  // @Get('all')
-  // async getAllAdmins(@Query() query: PaginationDto) {
-  //   return await this.adminService.getAllAdmins(query);
-  // }
-
-  // @ResponseMessage(RESPONSE_CONSTANT.USER.GET_CURRENT_USER_SUCCESS)
-  // @Get('/')
-  // async getCurrenAmin(@LoggedInUserDecorator() user: any) {
-  //   return await this.adminService.getAdmin(user.id);
-  // }
 }

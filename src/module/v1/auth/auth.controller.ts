@@ -1,12 +1,8 @@
-import { Body, Controller, Post, Res, Req } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, GoogleAuthDto } from '../user/dto/user.dto';
 import { ResponseMessage } from '../../../common/decorators/response.decorator';
-import {
-  LoginDto,
-  RequestVerifyEmailOtpDto,
-  VerifyEmailDto,
-} from './dto/auth.dto';
+import { LoginDto, VerifyEmailDto } from './dto/auth.dto';
 import { Public } from '../../../common/decorators/public.decorator';
 import { RESPONSE_CONSTANT } from '../../../common/constants/response.constant';
 import { Request } from 'express';
@@ -25,14 +21,8 @@ export class AuthController {
   @Public()
   @Post('login')
   @ResponseMessage(RESPONSE_CONSTANT.AUTH.LOGIN_SUCCESS)
-  async login(@Body() payload: LoginDto, adminId: string) {
-    return await this.authService.login(payload, adminId);
-  }
-
-  @Public()
-  @Post('verify-email/otp')
-  async sendVerificationEmail(@Body() payload: RequestVerifyEmailOtpDto) {
-    return await this.authService.sendVerificationMail(payload);
+  async login(@Body() payload: LoginDto) {
+    return await this.authService.login(payload);
   }
 
   @Public()

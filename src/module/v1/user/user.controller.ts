@@ -29,9 +29,9 @@ export class UserController {
     return await this.userService.getAllUsers(user._id, query);
   }
 
-  @Post('live-stream')
+  @Post('live-session')
   @ResponseMessage(RESPONSE_CONSTANT.CAMERA.CAMERA_ON)
   async liveStream(@LoggedInUserDecorator() user: ILoggedInUser,){
-    return await this.userService.liveStream(user._id)
+    return await this.userService.liveSession(user._id)
   }
 }

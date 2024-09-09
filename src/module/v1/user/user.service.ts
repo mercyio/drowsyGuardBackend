@@ -12,6 +12,7 @@ import { BaseHelper } from '../../../common/utils/helper.util';
 import { RepositoryService } from '../repository/repository.service';
 import { PaginationDto } from '../repository/dto/repository.dto';
 import { AgoraService } from 'src/common/utils/third_party_services/agora.service';
+import { IsUUID } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -113,16 +114,13 @@ export class UserService {
     });
   }
 
-  async liveStream(userId: string) {
-    await this.updateUserById(userId, { isCameraOn: true });
+  async liveSession(uid: string) {
+    await this.updateUserById(uid, { isCameraOn: true });
 
-    const channelName = `live_session_${userId}_${Date.now()}`;
-
-    const uid = Math.floor(Math.random() * 1000000); // Randomly generated uid
+    const channelName = `live_session_${uid}_${Date.now()}`;
 
     const token = await this.agoraService.generateToken(channelName, uid);
     return {
-      userId,
       uid,
       token,
     };
