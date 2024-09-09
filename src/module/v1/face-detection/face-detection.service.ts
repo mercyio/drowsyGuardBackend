@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as FormData from 'form-data';
 
@@ -25,7 +25,6 @@ export class FaceDetectionService {
         .toPromise(); // Convert Observable to Promise for async/await handling
 
       const responseJson = response.data;
-      console.log('Detections:', responseJson.detections);
 
       return {
         videoId: responseJson.video_id,
@@ -33,8 +32,9 @@ export class FaceDetectionService {
         frame: responseJson.frame,
       };
     } catch (error) {
-      console.error('Error processing frame:', error.message);
-      throw error;
+      throw new UnprocessableEntityException(
+        'Face detection failed. Please ensure your face is visible to the camera.',
+      );
     }
   }
 }

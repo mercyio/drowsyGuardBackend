@@ -23,9 +23,6 @@ export class FaceDetectionController {
       throw new BadRequestException('Missing frame file.');
     }
 
-    const frameBuffer = file.buffer;
-    console.log('frameBuffer:', frameBuffer);
-
-    return this.faceDetectionService.processFrame(videoId, frameBuffer);
+    return await this.faceDetectionService.processFrame(videoId, file.buffer);
   }
 }
