@@ -11,7 +11,7 @@ import { UserRoleEnum } from 'src/common/enums/user.enum';
 export class AdminService {
   constructor(
     @InjectModel(User.name)
-    private userModel: Model<UserDocument>,
+    private userModel: Model<UserDocument>,-m ''
   ) {}
 
   async create(): Promise<UserDocument> {
