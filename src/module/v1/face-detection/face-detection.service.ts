@@ -24,12 +24,12 @@ export class FaceDetectionService {
         })
         .toPromise(); // Convert Observable to Promise for async/await handling
 
-      const responseJson = response.data;
+      const detection = response.data;
 
       return {
-        videoId: responseJson.video_id,
-        detections: responseJson.detections,
-        frame: responseJson.frame,
+        videoId: detection.video_id,
+        detections: detection.detections,
+        frame: detection.frame,
       };
     } catch (error) {
       throw new UnprocessableEntityException(
