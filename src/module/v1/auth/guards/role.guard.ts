@@ -11,7 +11,10 @@ export class RolesGuard extends AuthGuard('jwt') implements CanActivate {
   }
 
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<UserRoleEnum[]>(ROLES_KEY, context.getHandler());
+    const roles = this.reflector.get<UserRoleEnum[]>(
+      ROLES_KEY,
+      context.getHandler(),
+    );
 
     if (!roles) {
       return true;
@@ -20,6 +23,6 @@ export class RolesGuard extends AuthGuard('jwt') implements CanActivate {
     const request = context.switchToHttp().getRequest();
 
     const userType = request.user.role;
-    return roles.some(r => r === userType);
+    return roles.some((r) => r === userType);
   }
 }

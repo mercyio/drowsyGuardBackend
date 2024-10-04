@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, GoogleAuthDto } from '../user/dto/user.dto';
 import { ResponseMessage } from '../../../common/decorators/response.decorator';
-import { LoginDto, VerifyEmailDto } from './dto/auth.dto';
+import { LoginDto, SuperAdminSignUpDto, VerifyEmailDto } from './dto/auth.dto';
 import { Public } from '../../../common/decorators/public.decorator';
 import { RESPONSE_CONSTANT } from '../../../common/constants/response.constant';
 import { Request } from 'express';
@@ -16,6 +16,13 @@ export class AuthController {
   @ResponseMessage(RESPONSE_CONSTANT.AUTH.REGISTER_SUCCESS)
   async register(@Body() payload: CreateUserDto) {
     return await this.authService.register(payload);
+  }
+
+  @Public()
+  @Post('super-admin/signup')
+  @ResponseMessage(RESPONSE_CONSTANT.AUTH.REGISTER_SUCCESS)
+  async superAdminSignUp(@Body() payload: SuperAdminSignUpDto) {
+    return await this.authService.superAdminSignUp(payload);
   }
 
   @Public()

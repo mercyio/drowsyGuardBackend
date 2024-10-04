@@ -1,4 +1,13 @@
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsBooleanString,
+  IsEmail,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
+import { PaginationDto } from '../../repository/dto/repository.dto';
 
 export class CreateUserDto {
   @IsString()
@@ -24,4 +33,35 @@ export class CreateUserDto {
 export class GoogleAuthDto {
   @IsEmail()
   email: string;
+}
+
+export class GetUserPublicDto {
+  @IsOptional()
+  @IsString()
+  firstname: string;
+
+  @IsOptional()
+  @IsString()
+  userId: string;
+
+  @IsOptional()
+  @IsEmail()
+  @Transform(({ value }) => value.toLowerCase())
+  email: string;
+}
+
+export class AdminGetAllUsersDto extends PaginationDto {
+  @IsOptional()
+  @IsBooleanString()
+  deactivated: boolean;
+
+  @IsOptional()
+  @IsString()
+  company: boolean;
+}
+
+export class AdminGetAllWorkspaceUsers extends PaginationDto {
+  @IsOptional()
+  @IsString()
+  workspace: string;
 }

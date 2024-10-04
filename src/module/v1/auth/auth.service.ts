@@ -6,11 +6,13 @@ import {
   Req,
 } from '@nestjs/common';
 import { CreateUserDto, GoogleAuthDto } from '../user/dto/user.dto';
-import { UserService } from '../user/user.service';
-import { LoginDto, VerifyEmailDto } from './dto/auth.dto';
+import { UserService } from '../user/services/user.service';
+import { LoginDto, SuperAdminSignUpDto, VerifyEmailDto } from './dto/auth.dto';
 import { BaseHelper } from '../../../common/utils/helper.util';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { ENVIRONMENT } from 'src/common/configs/environment';
+import { UserRoleEnum } from 'src/common/enums/user.enum';
 
 @Injectable()
 export class AuthService {
@@ -19,10 +21,24 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(payload: CreateUserDto) {
-    const user = await this.userService.createUser(payload);
+  async register(payload: CreateUserDto, role?: UserRoleEnum) {
+    const user = await this.userService.createUser(payload, role);
 
     return user;
+  }
+
+  async superAdminSignUp(payload: SuperAdminSignUpDto) {
+    const { secret, ...userPayload } = payload;
+
+    // TODO : IMPLEMENT ENCRYPTION AND DECRYPTION FOR SECRET KEY
+    if (secret !== ENVIRONMENT.APP.SU_SS_KEY) {
+      throw new BadRequestException('Invalid Secret Key');
+    }
+
+    return await this.register(
+      userPayload as CreateUserDto,
+      UserRoleEnum.SUPER_ADMIN,
+    );
   }
 
   async login(payload: LoginDto) {

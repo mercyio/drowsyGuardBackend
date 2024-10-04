@@ -7,6 +7,7 @@ export interface IEnvironment {
     PORT: number | string;
     ENV: string;
     ENCRYPTION_KEY: string;
+    SU_SS_KEY: string;
   };
   DB: {
     URL: string;
@@ -50,6 +51,7 @@ export const ENVIRONMENT: IEnvironment = {
     PORT: process.env.PORT || process.env.APP_PORT || 3000,
     ENV: process.env.APP_ENV,
     ENCRYPTION_KEY: process.env.APP_ENCRYPTION_KEY,
+    SU_SS_KEY: process.env.SU_SS_KEY,
   },
   DB: {
     URL: process.env.DB_URL,

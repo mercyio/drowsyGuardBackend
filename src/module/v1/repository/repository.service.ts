@@ -1,17 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { PaginationDto } from './dto/repository.dto';
+import {
+  IPaginationPayload,
+  IPaginationResponse,
+} from 'src/common/interfaces/repository.interface';
 
 @Injectable()
 export class RepositoryService {
-  async paginate(
-    model: any,
-    query?: PaginationDto,
-    options?: any,
-    populateFields?: any,
-  ) {
-    const { page = 1, size = 10, sort } = query;
+  async paginate<T>({
+    model,
+    query,
+    options,
+    populateFields,
+    selectFields,
+  }: IPaginationPayload<T>): Promise<IPaginationResponse<T>> {
+    const {
+      page = 1,
+      size = 10,
+      sortBy = 'createdAt',
+      sortDirection = 'desc',
+    } = query;
 
     const skip = (page - 1) * size;
+    const sort = sortBy ? { [sortBy]: sortDirection } : null;
 
     const [data, total] = await Promise.all([
       model
@@ -19,9 +30,10 @@ export class RepositoryService {
           ...options,
         })
         .skip(skip)
-        .sort({ createdAt: sort === 'desc' ? -1 : 1 })
         .limit(size > 100 ? 100 : size)
-        .populate(populateFields),
+        .populate(populateFields)
+        .select(selectFields)
+        .sort(sort),
       model.countDocuments({
         ...options,
       }),
@@ -31,8 +43,8 @@ export class RepositoryService {
       data,
       meta: {
         total,
-        page,
-        size,
+        page: Number(page),
+        size: Number(size),
         lastPage: Math.ceil(total / size),
       },
     };
