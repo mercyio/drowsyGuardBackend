@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../user/schemas/user.schema';
@@ -8,6 +8,7 @@ import { Workspace, WorkspaceDocument } from './schema/workspace.schema';
 import { CreateWorkspaceDto } from './dto/workspace.dto';
 import { createBrotliDecompress } from 'zlib';
 import { ILoggedInUser } from 'src/common/decorators/logged_in_user.decorator';
+import { UserService } from '../user/services/user.service';
 
 @Injectable()
 export class WorkspaceService {
@@ -22,6 +23,13 @@ export class WorkspaceService {
 
     try {
       const workspace = await this.workspaceModel.findOne({ company });
+      const userId = await this.userModel.findById({ _id: user._id });
+
+      if (userId.company) {
+        throw new ConflictException(
+          'Looks like you already belong to a workspace',
+        );
+      }
 
       if (workspace) {
         await this.userModel.findByIdAndUpdate(
@@ -41,7 +49,7 @@ export class WorkspaceService {
         });
 
         await this.userModel.findByIdAndUpdate(
-          user._id,
+          userId._id,
           {
             workspace: WorkspaceTypeEnum.ENTERPRISE,
             company: createdWorkspace._id,
@@ -51,9 +59,9 @@ export class WorkspaceService {
         );
       }
     } catch (error) {
-      // Rethrow the error or handle it as needed
-      //   throw new BadRequestException('Failed to create workspace');
-      console.error('Error in createWorkspace:', error);
+      throw new ConflictException(
+        'Looks like you already belong to a workspace',
+      );
     }
   }
   async getWorkspace(workspaceId: string): Promise<WorkspaceDocument> {

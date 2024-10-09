@@ -32,7 +32,6 @@ export class User {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: Workspace.name,
-    default: null,
   })
   company: mongoose.Types.ObjectId;
 
