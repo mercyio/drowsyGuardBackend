@@ -1,4 +1,9 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 interface IResponseMsg {
@@ -20,7 +25,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       success: false,
       data: exception.getResponse(),
-      message: Array.isArray(responseMsg.message) ? responseMsg.message[0] : message,
+      message: Array.isArray(responseMsg.message)
+        ? responseMsg.message[0]
+        : message,
     });
   }
 }

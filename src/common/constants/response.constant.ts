@@ -22,4 +22,9 @@ export const RESPONSE_CONSTANT = {
   CAMERA: {
     CAMERA_ON: 'Camera turned on successfully',
   },
+  WORKSPACE: {
+    WORKSPACE_CREATED_SUCCESS: 'Workspace created successfully',
+    WORKSPACE_UPDATED_SUCCESS: 'Workspace updated successfully',
+    WORKSPACE_DELETED_SUCCESS: 'Workspace deleted successfully',
+  },
 };

@@ -7,7 +7,9 @@ export interface ILoggedInUser {
   role: UserRoleEnum;
 }
 
-export const LoggedInUserDecorator = createParamDecorator((_: unknown, ctx: ExecutionContext) => {
-  const request = ctx.switchToHttp().getRequest();
-  return request.user;
-});
+export const LoggedInUserDecorator = createParamDecorator(
+  (_: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user;
+  },
+);

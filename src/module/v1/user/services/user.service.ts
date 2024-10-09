@@ -4,26 +4,27 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { User, UserDocument } from './schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
-import { CreateUserDto, GoogleAuthDto } from './dto/user.dto';
+import { CreateUserDto, GoogleAuthDto } from '../dto/user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { BaseHelper } from '../../../common/utils/helper.util';
-import { RepositoryService } from '../repository/repository.service';
-import { PaginationDto } from '../repository/dto/repository.dto';
+import { BaseHelper } from '../../../../common/utils/helper.util';
 import { AgoraService } from 'src/common/utils/third_party_services/agora.service';
-import { IsUUID } from 'class-validator';
+import { UserRoleEnum } from 'src/common/enums/user.enum';
 
 @Injectable()
 export class UserService {
   constructor(
-    private repositoryService: RepositoryService,
     private agoraService: AgoraService,
     @InjectModel(User.name)
     private userModel: Model<UserDocument>,
   ) {}
 
-  async createUser(payload: CreateUserDto): Promise<UserDocument> {
+  async createUser(
+    payload: CreateUserDto,
+    role?: UserRoleEnum,
+    createdByAdmin?: boolean,
+  ): Promise<UserDocument> {
     const { password, confirmPassword } = payload;
 
     try {
@@ -41,6 +42,11 @@ export class UserService {
       const result = await this.userModel.create({
         ...payload,
         password: hashedPassword,
+        ...(role ? { role } : { role: UserRoleEnum.USER }),
+        ...(createdByAdmin && {
+          accountGenerated: true,
+          emailVerified: true,
+        }),
       });
 
       delete result['_doc'].password;
@@ -62,8 +68,8 @@ export class UserService {
     return this.userModel.findOne({ email }).select('+password');
   }
 
-  async getUser(id: string): Promise<UserDocument> {
-    return this.userModel.findOne({ _id: id });
+  async getUser(userId: string): Promise<UserDocument> {
+    return this.userModel.findOne({ _id: userId });
   }
 
   async getUserByEmail(email: string): Promise<UserDocument> {
@@ -71,7 +77,7 @@ export class UserService {
   }
 
   async findOneById(userId: string) {
-    return this.userModel.findById(userId);
+    return this.userModel.findById({ _id: userId });
   }
 
   async updateUserByEmail(email: string, details: any) {
@@ -90,19 +96,6 @@ export class UserService {
     }
 
     return true;
-  }
-
-  async getAllUsers(userId: string, query: PaginationDto) {
-    // Fetches a paginated list of users, excluding the user with the specified userId
-    const paginated = await this.repositoryService.paginate(
-      this.userModel,
-      query,
-      {
-        _id: { $ne: userId },
-      },
-    );
-
-    return paginated;
   }
 
   async createUserFromGoogle(payload: GoogleAuthDto) {

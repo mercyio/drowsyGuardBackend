@@ -7,7 +7,6 @@ import { UserModule } from '../user/user.module';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { AdminModule } from '../admin/admin.module';
       global: true,
     },
     UserModule,
-    AdminModule,
   ],
   controllers: [AuthController],
   providers: [
