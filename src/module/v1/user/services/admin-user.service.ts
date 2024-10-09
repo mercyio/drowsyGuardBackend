@@ -157,7 +157,7 @@ export class AdminUserService {
   }
 
   async adminGetAllUsersInWorkspace(
-    admin: ILoggedInUser,
+    user: ILoggedInUser,
     payload: AdminGetAllWorkspaceUsers,
   ) {
     const { workspace, ...paginationQuery } = payload;
@@ -168,11 +168,15 @@ export class AdminUserService {
 
     const workspaceDoc = await this.workspaceService.getWorkspace(workspace);
 
-    // if (!workspaceDoc) {
-    //   throw new NotFoundException('Workspace not found.');
-    // }
+    if (!workspaceDoc) {
+      throw new NotFoundException('Workspace not found.');
+    }
 
-    if (workspaceDoc.creator.toString() !== admin._id.toString()) {
+    if (!user) {
+      throw new NotFoundException('user not found.');
+    }
+
+    if (workspaceDoc.creator.toString() !== user._id.toString()) {
       throw new BadRequestException(
         'You are not the creator of this workspace.',
       );
@@ -182,7 +186,7 @@ export class AdminUserService {
       model: this.userModel,
       query: paginationQuery,
       options: {
-        workspace: workspace,
+        company: workspace,
       },
     });
   }

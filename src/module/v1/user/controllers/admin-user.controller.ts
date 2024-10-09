@@ -68,14 +68,14 @@ export class AdminUserController {
   }
 
   @ResponseMessage(RESPONSE_CONSTANT.AUTH.REGISTER_SUCCESS)
-  @Public()
+  // @Public()
   @Get('workspace-users')
   async getWorkspaceUsers(
-    @LoggedInUserDecorator() admin: ILoggedInUser,
+    @LoggedInUserDecorator() user: ILoggedInUser,
     @Body() payload: AdminGetAllWorkspaceUsers,
   ) {
     return await this.adminUserService.adminGetAllUsersInWorkspace(
-      admin,
+      user,
       payload,
     );
   }

@@ -6,6 +6,8 @@ import { WorkspaceTypeEnum } from '../../../common/enums/workspace.enum';
 import { UserRoleEnum } from '../../../common/enums/user.enum';
 import { Workspace, WorkspaceDocument } from './schema/workspace.schema';
 import { CreateWorkspaceDto } from './dto/workspace.dto';
+import { createBrotliDecompress } from 'zlib';
+import { ILoggedInUser } from 'src/common/decorators/logged_in_user.decorator';
 
 @Injectable()
 export class WorkspaceService {
@@ -15,7 +17,7 @@ export class WorkspaceService {
     private workspaceModel: Model<WorkspaceDocument>,
   ) {}
 
-  async createWorkspace(user: UserDocument, payload: CreateWorkspaceDto) {
+  async createWorkspace(user: ILoggedInUser, payload: CreateWorkspaceDto) {
     const { company } = payload;
 
     try {
@@ -54,7 +56,7 @@ export class WorkspaceService {
       console.error('Error in createWorkspace:', error);
     }
   }
-  async getWorkspace(workspace: string): Promise<WorkspaceDocument> {
-    return this.workspaceModel.findOne({ workspace });
+  async getWorkspace(workspaceId: string): Promise<WorkspaceDocument> {
+    return this.workspaceModel.findOne({ _id: workspaceId });
   }
 }

@@ -69,7 +69,7 @@ export class UserService {
   }
 
   async getUser(userId: string): Promise<UserDocument> {
-    return this.userModel.findOne({ userId });
+    return this.userModel.findOne({ _id: userId });
   }
 
   async getUserByEmail(email: string): Promise<UserDocument> {
@@ -77,7 +77,7 @@ export class UserService {
   }
 
   async findOneById(userId: string) {
-    return this.userModel.findById(userId);
+    return this.userModel.findById({ _id: userId });
   }
 
   async updateUserByEmail(email: string, details: any) {

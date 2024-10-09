@@ -2,10 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { UserRoleEnum } from '../../../../common/enums/user.enum';
 import { WorkspaceTypeEnum } from '../../../../common/enums/workspace.enum';
-import {
-  Workspace,
-  WorkspaceDocument,
-} from '../../workspace/schema/workspace.schema';
+import { Workspace } from '../../workspace/schema/workspace.schema';
 
 export type UserDocument = User & Document;
 
@@ -37,7 +34,7 @@ export class User {
     ref: Workspace.name,
     default: null,
   })
-  company: WorkspaceDocument;
+  company: mongoose.Types.ObjectId;
 
   @Prop({ default: false })
   isGoogleAuth: boolean;

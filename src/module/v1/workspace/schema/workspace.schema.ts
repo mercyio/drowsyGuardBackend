@@ -1,13 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { UserDocument } from '../../user/schemas/user.schema';
+import mongoose, { Document } from 'mongoose';
 
 export type WorkspaceDocument = Workspace & Document;
 
 @Schema({ timestamps: true })
 export class Workspace {
-  @Prop({ type: String, ref: 'User', required: true })
-  creator: UserDocument;
+  @Prop({ types: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  creator: mongoose.Types.ObjectId;
 
   @Prop()
   company: string;
